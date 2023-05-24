@@ -17,6 +17,12 @@ class WelcomeController extends Controller{
     public function second(){
         return view('welcome_second');
     }
+    public function tree3(){
+        return view('welcome_tree3');
+    }
+    public function for4(){
+        return view('welcome_for4');
+    }
     
 }
 
