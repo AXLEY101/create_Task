@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+//テスト用
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\TestController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+
+
 
 
 /*
@@ -23,8 +27,12 @@ Route::get('/',[AuthController::class,'index']);
 Route::get('/task/list',[TaskController::class,'list']);
 
 
-//
+//テスト
 Route::get('/welcome',[WelcomeController::class,'index']);
 Route::get('/welcome/second',[WelcomeController::class, 'second']);
 Route::get('/welcome/tree3',[WelcomeController::class, 'tree3']);
 Route::get('/welcome/for4',[WelcomeController::class, 'for4']);
+
+//formテスト
+Route::post('/test/input',[TestController::class,'input']);
+Route::get('/test',[TestController::class,'index']);
