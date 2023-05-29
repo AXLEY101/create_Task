@@ -16,7 +16,7 @@ use App\Http\Controllers\WelcomeController;
 
 
 
-Route::get('/',[WelcomeController::class,'index']);
+Route::get('/welcome',[WelcomeController::class,'index']);
 Route::get('/welcome/second',[WelcomeController::class, 'second']);
 Route::get('/welcome/tree3',[WelcomeController::class, 'tree3']);
 Route::get('/welcome/for4',[WelcomeController::class, 'for4']);
