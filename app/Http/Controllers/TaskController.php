@@ -15,7 +15,16 @@ class TaskController extends Controller{
      * 
     */
     public function list(){
-        return view('task.list');
+        // 一覧の表示
+        $list = TaskModel::where('user_id', Auth::id())
+                            ->orderBy('priority','DESC')
+                            ->orderBy('period')
+                            ->orderBy('created_at')
+                            ->get();
+        // $sql = TaskModel::where('user_id', Auth::id())->orderBy('priority','DESC')->orderBy('period')->orderBy('created_at')->toSql();
+        // echo "<pre>\n"; var_dump($sql,$list); exit;
+        // var_dump($sql);
+        return view('task.list', ['list' => $list]);
     }
     
     public function register(TaskRegisterPostRequest $request){
@@ -24,9 +33,7 @@ class TaskController extends Controller{
         
         // $user = Auth::user();
         // $id = Auth::id();
-        
-        //var_dump($datum,$user,$id); exit;
-        
+        // var_dump($datum,$user,$id); exit;
         // user_idの追加
         $datum['user_id'] = Auth::id();
         
