@@ -58,6 +58,24 @@ class TaskController extends Controller{
         
     }
     
+    /**
+     * タスクの詳細閲覧
+    */
+    public function detail($task_id){
+        //task_idのレコードを取得
+        $task = TaskModel::find($task_id);
+        if($task === null){
+            return redirect('/task/list');
+        }
+        // 本人以外のタスクならNGとする
+        if($task->user_id !== Auth::id()){
+            return redirect('/task/list');
+        }
+        
+        //テンプレートに取得したレコードの情報を渡す
+        return view('task.detail', ['task' => $task]);
+    }
+    
 }
 
 ?>
