@@ -15,12 +15,16 @@ class TaskController extends Controller{
      * 
     */
     public function list(){
+        // 1page辺りの表示アイテム数を設定
+        $per_page = 20;
+        
         // 一覧の表示
         $list = TaskModel::where('user_id', Auth::id())
                             ->orderBy('priority','DESC')
                             ->orderBy('period')
                             ->orderBy('created_at')
-                            ->get();
+                            ->paginate($per_page);
+                        //    ->get();  //get()だと「レコード全件取得」paginate(3)だと指定数分のみデータとして取得し、ページネーションように必要な次へと前へのリンクなどを取得するメソッドを実行する事もできるようにする。
         // $sql = TaskModel::where('user_id', Auth::id())->orderBy('priority','DESC')->orderBy('period')->orderBy('created_at')->toSql();
         // echo "<pre>\n"; var_dump($sql,$list); exit;
         // var_dump($sql);
