@@ -4,9 +4,13 @@
 (詳細画面)
 @endsection
 @section('contets')
-    <h1>タスク詳細一覧</h1>
-    タスク名：{{ $task->name }}<br>
-    期限：{{ $task->period }}<br>
+    <h1>タスク詳細閲覧</h1>
+    @if(session('front.task_edit_success') === true)
+        タスクを編集しました<br>
+    @endif
+    
+    タスク名：{{  $task->name }}<br>
+    期限：{{  $task->period }}<br>
     重要度：{{ $task->getPriorityString() }}<br>
     タスク詳細：<pre>{{ $task->detail }}</pre><br>
         <hr>
