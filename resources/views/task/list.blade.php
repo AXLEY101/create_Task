@@ -17,6 +17,16 @@
             @if(session('front.task_register_success') == true)
                 タスクを登録しました！<br>
             @endif
+            @if(session('front.task_delete_success') == true)
+                タスクを削除しました！<br>
+            @endif
+            @if(session('front.task_completed_success') == true)
+                タスクを完了に移動しました<br>
+            @endif
+            @if(session('front.task_completed_failure') == true)
+                タスクの完了で問題が発生しました<br>
+            @endif
+            
             
             <form action="/task/register" method="post">
                 @csrf
@@ -43,7 +53,7 @@
                     <td>{{ $task->getPriorityString() }}
                     <td><a href="{{ route('detail', ['task_id' => $task->id]) }}">詳細閲覧</a>
                     <td><a href="{{ route('edit',['task_id' => $task->id]) }}">編集</a>
-                    <td><form action="./top.html"><button>完了</button></form>
+                    <td><form action="{{ route('complete',['task_id' => $task->id]) }}" method="post"> @csrf <button onclick='return confirm("このタスクを完了にしますか？");'>完了</button></form>
             @endforeach
         </table>
         <!-- ページネーション -->
