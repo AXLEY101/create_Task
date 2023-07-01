@@ -40,7 +40,6 @@ class AuthController extends Controller{
         $request->session()->regenerate();//セッションIDの再生成
         return redirect(route('admin.index'));
     }
-    
 }
 
 ?>
