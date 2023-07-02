@@ -15,4 +15,22 @@ class CompletedTask extends Model
      * Add [id] to fillable property to allow mass assignment on[]の
     */
     protected $guarded = [];
+    
+    /**
+     * 重要度用の定数
+    */
+    const PRIORITY_VALUE = [
+            1 => '低い',
+            2 => '普通',
+            3 => '高い',
+        ];
+    
+    /**
+     * 重要度の文字列を取得
+     * 
+    */
+    public function getPriorityString(){
+        return $this::PRIORITY_VALUE[$this->priority] ?? '';
+    }
+    
 }

@@ -5,7 +5,7 @@
 @endsection
 @section('contets')
 
-        <h1>タスクの登録</h1>
+        <h1>完了タスク一覧</h1>
             @if($errors->any())
                 <div>
                     @foreach($errors->all() as $error)
@@ -26,35 +26,21 @@
             @if(session('front.task_completed_failure') == true)
                 タスクの完了で問題が発生しました<br>
             @endif
-            
-            
-            <form action="/task/register" method="post">
-                @csrf
-                タスク名：<input name="name" value="{{ old('name') }}"><br>
-                期限：<input type="date" name="period" value="{{ old('period') }}"><br>
-                タスク詳細：<textarea name="detail">{{ old('detail') }}</textarea><br>
-                重要度：<label><input type="radio" name="priority" value="1" @if (old('priority') == 1) checked @endif>低い</label> / 
-                    <lavel><input type="radio" name="priority" value="2" @if (old('priority',2) == 2) checked @endif>普通</lavel> / 
-                    <label><input type="radio" name="priority" value="3" @if (old('priority') == 3) checked @endif>高い</label><br>
-                <button>タスクを登録する</button>
-            </form>
-            
-        <h1>タスクの一覧</h1>
-        <a href="./top.html">CSVダウンロード未</a><br>
-        <a href="/completed/list">完了タスク一覧</a>
+         
+        
+        <a href="/task/list">タスク一覧</a>
         <table border="1">
             <tr>
                 <th>タスク名
                 <th>期限
                 <th>重要度
+                <th>タスク終了日
             @foreach($list as $task)
                 <tr>
                     <td>{{ $task->name }}
                     <td>{{ $task->period }}
                     <td>{{ $task->getPriorityString() }}
-                    <td><a href="{{ route('detail', ['task_id' => $task->id]) }}">詳細閲覧</a>
-                    <td><a href="{{ route('edit',['task_id' => $task->id]) }}">編集</a>
-                    <td><form action="{{ route('complete',['task_id' => $task->id]) }}" method="post"> @csrf <button onclick='return confirm("このタスクを完了にしますか？");'>完了</button></form>
+                    <td>{{ $task->created_at }}
             @endforeach
         </table>
         <!-- ページネーション -->
