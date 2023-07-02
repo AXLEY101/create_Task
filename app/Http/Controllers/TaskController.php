@@ -22,10 +22,7 @@ class TaskController extends Controller{
         $per_page = 20;
         
         // 一覧の表示
-        $list = TaskModel::where('user_id', Auth::id())
-                            ->orderBy('priority','DESC')
-                            ->orderBy('period')
-                            ->orderBy('created_at')
+        $list = $this->getListBuilder()
                             ->paginate($per_page);
                         //    ->get();  //get()だと「レコード全件取得」paginate(3)だと指定数分のみデータとして取得し、ページネーションように必要な次へと前へのリンクなどを取得するメソッドを実行する事もできるようにする。
         // $sql = TaskModel::where('user_id', Auth::id())->orderBy('priority','DESC')->orderBy('period')->orderBy('created_at')->toSql();
@@ -33,6 +30,19 @@ class TaskController extends Controller{
         // var_dump($sql);
         return view('task.list', ['list' => $list]);
     }
+    
+    /**
+     * 一覧用の Illuminate\Database\Eloquent\Builder インスタンスの取得
+     * かつ、一覧表示とCSVダウンロードの羅列を一致
+    */
+    public function getListBuilder(){
+        return TaskModel::where('user_id', Auth::id())
+                            ->orderBy('priority', 'DESC')
+                            ->orderBy('period')
+                            ->orderBy('created_at');
+                            
+    }
+    
     
     public function register(TaskRegisterPostRequest $request){
         //validate済みデータの取得
@@ -192,6 +202,56 @@ class TaskController extends Controller{
         return redirect('/task/list');
     }
     
+    /**
+     * CSV　ダウンロード
+    */
+    public function csvDownload(){
+        //excelのヘッダーに当たる部分を作る　同時に、記述がないものは取得しないので「不要なデータ出力制限」になる
+        $data_list =[
+                'id' => 'タスクID',
+                'name' => 'タスク名',
+                'priority' => '重要度',
+                'period' => '期限',
+                'detail' => 'タスク詳細',
+                'created_at' => 'タスク作成日',
+                'updated_at' => 'タスク修正日',
+            ];
+        //ダウンロードさせたいCSVを作成
+        //一覧を取得
+        $list = $this->getListBuilder()->get();
+        
+        //バッファリング開始
+        ob_start();
+        
+        //「書き込み先を出力にした」ファイルハンドルを作成 \SplFileObjectの'php://output'は「echoと同じように出力する」ためのファイル
+        $file = new \SplFileObject('php://output', 'w');
+        // ヘッダを書き込む
+        $file->fputcsv(array_values($data_list));
+        //CSVをファイルに書き込む（出力する）
+        foreach($list as $datum){
+            $awk = [];//作業領域の確保
+            // $data_listに書いてある順番に、かいてある要素だけを$awkに格納する
+            foreach($data_list as $k => $v){
+                if($k === 'priority'){
+                    $awk[] = $datum->getPriorityString();
+                }else{
+                    $awk[] = $datum->$k;
+                }
+            }
+            $file->fputcsv($awk);
+        }
+        //現在のバッファの中身を取得し、出力バッファを削除する
+        $csv_string = ob_get_clean();
+        
+        //文字コードを変換する　csv:SJIS php:UTF-8のため
+        $csv_string_sjis = mb_convert_encoding($csv_string, 'SJIS','UTF-8');
+        //　ダウンロードファイルネームの作成
+        $download_filename = 'task_list' . date('Ymd') . '.csv';
+        //csvを出力
+        return response($csv_string_sjis)
+                    ->header('Content-Type', 'text/csv')
+                    ->header('Content-Disposition', 'attachment; filename="' . $download_filename . '"');
+    }
     
 }
 
