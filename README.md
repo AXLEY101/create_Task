@@ -7,58 +7,59 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## こちらのファイル群はLaravelでの動作を前提として記述しております。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p>下記の環境で動作をチェックしています。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<p>・Laravelのcomposerを使ってインストール</p>
+<p> composer create-project laravel/laravel ./todolist --prefer-dist</p>
+<p>をコンソールに入力し、展開してください。　出来上がったtodolistにgithubに記載したファイル群を上書きで保存して、起動してください。　（cdでホームディレクトリに移動してから作業するとenvironmentディレクトリと同じ階層に出来上がります）</p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p>2023/5/20日時点のAWSはphp version 7.2なので変更が必要です。</p>
 
-## Learning Laravel
+<p>php version</p>
+<p>PHP 7.4.33 (cli) (built: Nov 19 2022 00:22:13) ( NTS )</p>
+<p>Copyright (c) The PHP Group</p>
+<p>Zend Engine v3.4.0, Copyright (c) Zend Technologies</p>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+<p>mariadb version</p>
+<p>MariaDB 10.5 database server</p>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<p>データベース設定</p>
+<p>CREATE DATABASE todolist CHARACTER SET utf8mb4;</p>
+<p>CREATE USER 'todouser'@'localhost' IDENTIFIED BY '任意のパス';  (注意データベースのユーザのパスワードです。)</p>
 
-## Laravel Sponsors
+<p>.envファイルの設定</p>
+<p>DB_DATABASE=todolist</p>
+<p>DB_USERNAME=todouser</p>
+<p>DB_PASSWORD=任意のパス　（注意　DB初期設定時の任意のパスワードです。）</p>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+<p>また、todouserには全権限を付与してください。</p>
+<p>GRANT all ON todolist.* TO 'todouser'@'localhost';</p>
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+<p>以上の設定が終わりましたら、コンソールにてマイグレーションを実行してください</p>
+<p>php artisan migrate</p>
 
-## Contributing
+<p>管理者はseederで設定しております コンソールにて下記を入力してください</p>
+<p>php artisan db:seed --class=AdminAuthUser</p>
+<p>初期設定は、ログインID：hogehoge　パスワード：pass　としておりますので、ご確認ください。</p>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<p>・ユーザー登録機能</p>
+<p>・ログイン機能</p>
+<p>・ユーザー毎のタスク登録、テキスト記述、タスクの削除、編集機能</p>
+<p>・優先順位でのソートによる一覧表示</p>
+<p>・管理者用のログイン機能を記載しています。ドメイン/adminから動かす事ができます。</p>
+<p>・管理者用の管理画面（現在登録件数、アカウント毎の入力一覧、削除など）</p>
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<p>ポートフォリオなので、メール登録などは簡易になっています。</p>
+<p>同じく、本来ならDBでの書き込みにてエラーが出たさい、ロールバックと共に、エラー内容を記述する挙動を取りますが、ここもエラー内容書き込みの処理を簡易処理にしています。</p>
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<p>・web.phpにRoute::を用いた処理を記述しています。</p>
+<p>・各種Controllerにて、Modelを使った書き込み、formRequestクラスを用いたバリデート、redirectでのページ遷移などの動作を記述しています。</p>
+<p>・Modelにて、各種テーブルの書き込みルールを記述しています。</p>
+<p>・migration機能を利用するために、migrationに初期設定を記述しています。　DBに作られるテーブルの設定はここを確認してください。</p>
+<p>・.blade.phpにて、展開されるファイルの記述をしています。　layout.blade.phpにテンプレートを記述していますので、雛形はこちらを確認してください。</p>
