@@ -9,13 +9,13 @@
 
 ## こちらのファイル群はLaravelでの動作を前提として記述しております。
 
-<p>下記の環境で動作をチェックしています。</p>
+<h1>下記の環境で動作をチェックしています。</h1>
 <p>PHP 7.4.33</p>
 <p>Laravel 8.83.27</p>
 <p>mariadb 10.5</p>
 <p>AWS Cloud9</p>
 
-<p>まずはPHPのバージョンを揃えます。</p>
+<h3>まずはPHPのバージョンを揃えます。</h3>
 <p>sudo amazon-linux-extras disable lamp-mariadb10.2-php7.2</p>
 <p>sudo amazon-linux-extras enable php7.4</p>
 <p>この２つのコマンドを実行する事で、php7.2を無効化し、バージョン7.4を有効化</p>
@@ -59,7 +59,7 @@
 <p>この一文を追加すると、xdebugが有効になり、 php -v コマンドでxdebugが表記されています。</p>
 <p></p>
 <p></p>
-<p>次にmariadbをインストールします。</p>
+<h1>次にmariadbをインストールします。</h1>
 <p>sudo amazon-linux-extras enable mariadb10.5</p>
 <p>sudo yum -y install mariadb</p>
 <p>この二つで、mariadbがインストールされるので</p>
@@ -74,119 +74,90 @@
 <p>sudo mysql_secure_installation</p>
 <p>こちらを入力するとEnter current password for root (enter for none): と出ます。「現在のパスワードの入力」は、現在は未設定なので、何も入力せずに Enter キーを押します。</p>
 <p>次にSwitch to unix_socket authentication [Y/n]  とでます。初期設定のままでよいので、何も入力せずに Enterキーを押します。</p>
-<p>次に"Change the root password? [Y/n]   とでます。「rootのパスワードの変更をしますか？」と聞かれます。Y を入力することで、変更できるようになります。ここはきちんと変更しておきましょう。
-Y を入力します。"</p>
+<p>次にChange the root password? [Y/n]   とでます。「rootのパスワードの変更をしますか？」と聞かれます。Y を入力することで、変更できるようになります。ここはきちんと変更しておきましょう。
+Y を入力します。</p>
 <p>次にNew password:</p>
 <p>次にRe-enter new password:</p>
 <p>と表示されます。　これはroot（一番権限の強いアカウント）のパスワードを入力します。 上のように２回聞かれます。</p>
-<p>次に"Remove anonymous users? [Y/n]　「匿名ユーザの削除」の設定を聞かれます。
-セキュリティ的に削除したほうがよいので、 Y を入力します。"</p>
-<p>次に"Disallow root login remotely? [Y/n]　「リモートからのrootログインの禁止」の設定を聞かれます。
-セキュリティ上、これも設定したほうがよいので、 Y を入力します。"</p>
-<p>次に"Remove test database and access to it? [Y/n]　「test」というdatabaseの削除するかどうかを聞かれます。
-残しておいてもよいのですが、後で改めてdatabaseの作成を行いますので、いったん削除しておきましょう。 Y を入力します。"</p>
-<p>次に"Reload privilege tables now? [Y/n]　いろいろな設定を変更したので、「設定のリロード（再読込）」をしておきます。
+<p>次にRemove anonymous users? [Y/n]　「匿名ユーザの削除」の設定を聞かれます。
+セキュリティ的に削除したほうがよいので、 Y を入力します。</p>
+<p>次にDisallow root login remotely? [Y/n]　「リモートからのrootログインの禁止」の設定を聞かれます。
+セキュリティ上、これも設定したほうがよいので、 Y を入力します。</p>
+<p>次にRemove test database and access to it? [Y/n]　「test」というdatabaseの削除するかどうかを聞かれます。
+残しておいてもよいのですが、後で改めてdatabaseの作成を行いますので、いったん削除しておきましょう。 Y を入力します。</p>
+<p>次にReload privilege tables now? [Y/n]　いろいろな設定を変更したので、「設定のリロード（再読込）」をしておきます。
 Y を入力します。
-ここまでで、必要なインストール作業が一段落しました。"</p>
+ここまでで、必要なインストール作業が一段落しました。</p>
 <p></p>
 <p></p>
 <h1>Laravelのインストール</h1>
+<p>LaravelはPHP用のパッケージ管理システムcomposerを使ってインストールします。まずはcomposer自体をインストールします。</p>
+<p>composerのインストール手順は</p>
+<p>https://getcomposer.org/download/</p>
+<p>の「Command-line installation」に記載されてる順に実行します。</p>
+<p>コンソールでcd とだけ入力してホームディレクトリに移動してから作業します。</p>
+<p>"php -r ""copy('https://getcomposer.org/installer', 'composer-setup.php');""
+php -r ""if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;""
+php composer-setup.php
+php -r ""unlink('composer-setup.php');"""</p>
+<p>サイトを訪問すると上のように書かれている部分を一行づつ実行します。　上から２行目は日にちが立つと変化するため、この記述通りにはならないことに注意。</p>
+<p>入力できたら、lsコマンドで確認し、「composer.phar」というファイルが作成されていればＯＫ</p>
+<p>このファイルを移動して、「どこからでも使える」ようにします。</p>
+<p>sudo mv composer.phar /usr/local/bin/composer</p>
+<p>使えるようになったかは type composerと入力すると</p>
+<p>「composer is /usr/local/bin/composer」と記述されていればOK</p>
+<p>これでcomposerコマンドを使う準備が整いました。</p>
+<p>ついにインストールです</p>
+<p>念のため、cdでホームディレクトリに移動してから作業してください</p>
+<p>まずプロジェクトのクローンを作成します</p>
+<p>git clone [リポジトリのURL] [任意のディレクトリ名]</p>
+<p>上記のコマンドでgithubのURLからクローンを作成できます。　僕のポートフォリオは下記でOKです。</p>
+<p>git clone https://github.com/AXLEY101/create_Task.git todolist</p>
+<p>次にcomposerで依存関係が保存されていますので、コンポーザーをインストール</p>
+<p>composer install</p>
 <p></p>
+<p>終わったら、次は.envファイルを設定しなおします。　このファイルはセキュリティの都合上githubに登録できません。</p>
+<p>まずは、.envを作成します。　todolist直下にある.env.exampleをコピーして.envにリネームします。</p>
+<p>ホームディレクトリでプロジェクトのクローンを作成しているなら下記のコマンドでコピーできます</p>
+<p>cp ~/todolist/.env.example ~/todolist/.env</p>
+<p>次に.envファイルを編集してやります。</p>
+<p>開いたら下記のように書かれているはずです。</p>
+<p>DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=</p>
+<p>これを下記のように書き換えてください</p>
+<p>DB_DATABASE=todolist
+DB_USERNAME=todouser
+DB_PASSWORD=（ここはデータベースにアクセスする際のパスワードになります。todouserに設定したパスワードを記載してください。）</p>
 <p></p>
+<p>次に、APP＿KEYを作成します。</p>
+<p>php artisan key:generate</p>
+<p>こちらを入力すると、.envファイルのAPP＿KEYに入力されます。</p>
 <p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-<p></p>
-
-
-
-<p>・Laravelのcomposerを使ってインストール</p>
-<p> composer create-project laravel/laravel ./todolist --prefer-dist</p>
-<p>をコンソールに入力し、展開してください。　出来上がったtodolistにgithubに記載したファイル群を上書きで保存して、起動してください。　（cdでホームディレクトリに移動してから作業するとenvironmentディレクトリと同じ階層に出来上がります）</p>
-
-<p>2023/5/20日時点のAWSはphp version 7.2なので変更が必要です。</p>
-<p>コンソールで下記を入力してaws上のphp7.2を無効化し、7.4を有効化してください。</p>
-<p>sudo amazon-linux-extras disable lamp-mariadb10.2-php7.2</p>
-<p>sudo amazon-linux-extras enable php7.4</p>
-<p>下記を入力し、php7.4=latest            enabled      [ =stable ]となっていれば設定できています。</p>
-<p>sudo amazon-linux-extras list | grep php</p>
-<p>この状態で「インストール準備」が整いましたので、</p>
-<p>sudo yum clean metadata</p>
-<p>sudo yum -y update</p>
-<p>sudo yum -y install php</p>
-<p></p>
-<p>php -vと入力し下記のようになっていればOKです</p>
-<p>php version</p>
-<p>PHP 7.4.33 (cli) (built: Nov 19 2022 00:22:13) ( NTS )</p>
-<p>Copyright (c) The PHP Group</p>
-<p>Zend Engine v3.4.0, Copyright (c) Zend Technologies</p>
-<p></p>
-<p></p>
-<p>動くことを確認したmariadbバージョン</p>
-<p>mariadb version</p>
-<p>MariaDB 10.5 database server</p>
-<p></p>
-<p></p>
-<p>データベース設定</p>
-<p>コンソールにて下記を入力し、mariadbを立ち上げます</p>
-<p>sudo systemctl start mariadb</p>
-<p>下記を入力し、初期設定をします</p>
-<p>sudo mysql_secure_installation</p>
-<p>Enter current password for root (enter for none): 「現在のパスワードの入力」は、現在は未設定なので、何も入力せずに Enter キーを押します。</p>
-<p>Switch to unix_socket authentication [Y/n]  初期設定のままでよいので、何も入力せずに Enterキーを押します。</p>
-<p>Change the root password? [Y/n]   「rootのパスワードの変更をしますか？」と聞かれます。Y を入力することで、変更できるようになります。ここはきちんと変更しておきましょう。
-Y を入力します。(ここのパスワードで後ほどDBの設定をしますので覚えておいてください)</p>
-<p>New password:</p>
-<p>Re-enter new password:</p>
-<p>上記のように２回聞かれるので、同じパスを二度入力してください　二度目は確認用です。</p>
-<p></p>
-<p>"Remove anonymous users? [Y/n]　「匿名ユーザの削除」の設定を聞かれます。
-セキュリティ的に削除したほうがよいので、 Y を入力します。"</p>
-<p>"Disallow root login remotely? [Y/n]　「リモートからのrootログインの禁止」の設定を聞かれます。
-セキュリティ上、これも設定したほうがよいので、 Y を入力します。"</p>
-<p>"Remove test database and access to it? [Y/n]　「test」というdatabaseの削除するかどうかを聞かれます。
-残しておいてもよいのですが、後で改めてdatabaseの作成を行いますので、いったん削除しておきましょう。 Y を入力します。"</p>
-<p>"Reload privilege tables now? [Y/n]　いろいろな設定を変更したので、「設定のリロード（再読込）」をしておきます。
-Y を入力します。
-ここまでで、必要なインストール作業が一段落しました。"</p>
-<p></p>
-<p></p>
-<p></p>
-<p>下記で、todolistというデータベースを作成し、日本語に対応したutf8mb4を設定します。</p>
+<p>次に、データベースのtodouserに権限を渡してやります。</p>
+<p>まず、データベースにrootでログインします</p>
+<p>mysql -u root -p</p>
+<p>MariaDB [(none)]>  ←のようになったらログイン成功　rootは全ての権限を持っているので、データベース作成とtodouserに権限を委譲する。</p>
+<p>まずデータベースを作成する。 todolistという名前で、日本語に対応するためｍb4を選択</p>
 <p>CREATE DATABASE todolist CHARACTER SET utf8mb4;</p>
-<p></p>
-<p>下記で、todouserというmariadbでログインできるユーザーを作成します。</p>
-<p>CREATE USER 'todouser'@'localhost' IDENTIFIED BY '任意のパス';  (注意データベースのユーザのパスワードです。)</p>
-
-<p>また、todouserには全権限を付与してください。</p>
+<p>次にtodouserを作成　パスワードを与える。　（今回はポートフォリオのためパスワードをrootと同じにしています。）</p>
+<p>CREATE USER 'todouser'@'localhost' IDENTIFIED BY ' (先ほど.envファイルに記述したDB_PASSWORDと同じにしてください)';</p>
+<p>次に、todouserにtodolistデータベースの全ての権限を委譲</p>
 <p>GRANT all ON todolist.* TO 'todouser'@'localhost';</p>
 <p></p>
-<p></p>
-
-<p>.envファイルの設定</p>
-<p>DB_DATABASE=todolist</p>
-<p>DB_USERNAME=todouser</p>
-<p>DB_PASSWORD=任意のパス　（注意　todouserというユーザーを作成した際のパスワードです。）</p>
-
-
-<p></p>
-<p></p>
-
-<p>以上の設定が終わりましたら、コンソールにてマイグレーションを実行してください</p>
-<p>php artisan migrate</p>
-
-<p>管理者はseederで設定しております コンソールにて下記を入力してください</p>
+<p>ここまで来たら、マイグレーションが動くようになります。</p>
+<p>php artisan migrateでマイグレーションを動かします。</p>
+<p>管理者をシーダーで記載していますので、シーダーを動かして管理者を登録します</p>
 <p>php artisan db:seed --class=AdminAuthUser</p>
+<p>これで、動く状態が出来上がりました。 Laravelの仮想サーバーを動かして挙動を確認しましょう。</p>
+<p>cd でtodolistディレクトリに移動しコンソールで下記を記述します。</p>
+<p>php artisan serve --port=8080</p>
+<p>新しいコンソールを開き、今度はデータベースを起動してやります。</p>
+<p>sudo systemctl start mariadb</p>
+<p></p>
+<p>起動を確認したら、「ドメイン/」にアクセスすると、タスク管理システムが動いています。</p>
+<p></p>
 <p>初期設定は、ログインID：hogehoge　パスワード：pass　としておりますので、ご確認ください。</p>
-
-
-
-<p>・ユーザー登録機能</p>
-<p>・ログイン機能</p>
-<p>・ユーザー毎のタスク登録、テキスト記述、タスクの削除、編集機能</p>
-<p>・優先順位でのソートによる一覧表示</p>
 <p>・管理者用のログイン機能を記載しています。ドメイン/adminから動かす事ができます。</p>
 <p>・管理者用の管理画面（現在登録件数、アカウント毎の入力一覧、削除など）</p>
 
